@@ -1,8 +1,12 @@
+import { FlashBanner } from '../ui/FlashBanner.jsx'
+import { useCommitments } from '../../context/CommitmentContext.jsx'
 import { MobileNav } from './MobileNav.jsx'
 import { Sidebar } from './Sidebar.jsx'
 import { TopBar } from './TopBar.jsx'
 
 export function AppShell({ currentPage, onNavigate, children }) {
+  const { flash, dismissFlash } = useCommitments()
+
   return (
     <div className="flex min-h-svh bg-canvas">
       <a
@@ -15,6 +19,7 @@ export function AppShell({ currentPage, onNavigate, children }) {
       <div className="flex min-w-0 flex-1 flex-col pb-16 lg:pb-0">
         <TopBar currentPage={currentPage} onNavigate={onNavigate} />
         <main id="main-content" className="flex-1">
+          <FlashBanner flash={flash} onDismiss={dismissFlash} />
           {children}
         </main>
       </div>

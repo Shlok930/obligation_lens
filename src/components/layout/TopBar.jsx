@@ -14,10 +14,10 @@ export function TopBar({ currentPage, onNavigate }) {
             Obligation Lens
           </p>
           <h1 className="truncate text-lg font-semibold text-ink sm:text-xl">
-            {page?.title}
+            {page?.title ?? 'Page not found'}
           </h1>
           <p className="hidden truncate text-sm text-muted sm:block">
-            {page?.subtitle}
+            {page?.subtitle ?? 'Choose a section from the navigation.'}
           </p>
         </div>
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">

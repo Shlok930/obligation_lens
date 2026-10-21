@@ -37,8 +37,7 @@ export function Sidebar({ currentPage, onNavigate }) {
         })}
       </nav>
       <p className="px-5 py-5 text-xs leading-relaxed text-muted">
-        Data in this build is sample content. Future entries will stay in this
-        browser.
+        All data stays in this browser. Nothing is sent to a server.
       </p>
     </aside>
   )

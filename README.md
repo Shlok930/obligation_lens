@@ -1,16 +1,31 @@
-# React + Vite
+# Obligation Lens
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A local-first React app for recording commitments, tracking important dates and actions, reviewing document-derived findings, and managing JSON backups. There is no backend or account sync. Document analysis is a transparent rule-based prototype; verify extracted details against the original document.
 
-Currently, two official plugins are available:
+## Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- `npm.cmd run dev` starts the local development server.
+- `npm.cmd test` runs the built-in Node test suite.
+- `npm.cmd run lint` runs Oxlint.
+- `npm.cmd run build` creates the production bundle.
 
-## React Compiler
+## Local data and backups
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Commitments are stored in this browser profile under the `obligation-lens-commitments` key. The stored value uses schema version 1. Existing plain-array data is validated and migrated under the same key; malformed data and unsupported future versions are preserved and reported instead of being replaced.
 
-## Expanding the Oxlint configuration
+Settings exports a JSON backup with this structure:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```json
+{
+  "schemaVersion": 1,
+  "exportedAt": "2026-10-22T00:00:00.000Z",
+  "application": "Obligation Lens",
+  "commitments": []
+}
+```
+
+Imports are validated and previewed before applying. Merge keeps existing records by default when IDs or conservative title/category/merchant/date/reference matching suggest a duplicate, with an option to import conflicting records as new copies. Replace requires a separate confirmation. Backups remain local unless you choose where to save or move the downloaded file.
+
+Document analysis history stores metadata only, never pasted document text. Accepted findings are saved only after review and confirmation; those findings retain only their evidence excerpt and finding metadata with the commitment. Extracted amounts are not used as the commitment purchase amount.
+
+The Obligation Explorer health summary uses this precedence: explicitly completed, overdue incomplete action, upcoming action/date or passed expected-refund date, on track when usable timeline data shows none of those conditions, then insufficient information when timing cannot be assessed. Its what-if panel uses temporary copies and does not save until the user selects a save action. Payment verification and remaining balances are not tracked by this app.

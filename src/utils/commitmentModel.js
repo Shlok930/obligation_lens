@@ -18,6 +18,7 @@ export function emptyActionRow() {
     key: createId('action-row'),
     title: '',
     dueDate: '',
+    note: '',
     completed: false,
   }
 }
@@ -42,6 +43,7 @@ export function emptyCommitmentForm(now = new Date()) {
       notes: '',
     },
     actions: [],
+    documentEvidence: [],
     status: 'active',
   }
 }
@@ -63,6 +65,7 @@ export function formFromCommitment(commitment) {
       type: DATE_TYPE_VALUES.has(item.type) ? item.type : 'custom',
       date: item.date ?? '',
       note: item.note ?? '',
+      resolved: Boolean(item.resolved),
     })),
     financialExposure: {
       refundableAmount: stringifyNumber(commitment.financialExposure?.refundableAmount),
@@ -78,8 +81,10 @@ export function formFromCommitment(commitment) {
       id: item.id,
       title: item.title ?? '',
       dueDate: item.dueDate ?? '',
+      note: item.note ?? '',
       completed: Boolean(item.completed),
     })),
+    documentEvidence: structuredCloneSafe(commitment.documentEvidence ?? []),
     status: commitment.status ?? 'active',
   }
 }
@@ -188,6 +193,7 @@ export function buildCommitmentRecord(form, { existing } = {}) {
         type: row.type,
         date: row.date,
         note: row.note.trim(),
+        ...(row.resolved ? { resolved: true } : {}),
       })),
     financialExposure: {
       refundableAmount: parseMoneyInput(form.financialExposure.refundableAmount).value,
@@ -204,8 +210,10 @@ export function buildCommitmentRecord(form, { existing } = {}) {
         id: row.id ?? createId('act'),
         title: row.title.trim(),
         dueDate: row.dueDate || null,
+        note: row.note?.trim() ?? '',
         completed: Boolean(row.completed),
       })),
+    documentEvidence: structuredCloneSafe(form.documentEvidence ?? []),
     status: form.status || 'active',
     createdAt: existing?.createdAt ?? now,
     updatedAt: now,
@@ -266,4 +274,8 @@ export function parseMoneyInput(value, { required = false } = {}) {
 function stringifyNumber(value) {
   if (value === null || value === undefined || value === '') return ''
   return String(value)
+}
+
+function structuredCloneSafe(value) {
+  return JSON.parse(JSON.stringify(value))
 }

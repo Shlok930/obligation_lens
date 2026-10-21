@@ -26,7 +26,7 @@ export function CommitmentCard({ commitment, onEdit, onDelete, compact = false }
               </span>
             </>
           ) : (
-            <span className="text-xs text-muted">—</span>
+            <span className="text-xs text-muted/50">—</span>
           )}
         </div>
         <div className="min-w-0 flex-1 border-l border-line pl-4">
@@ -109,13 +109,21 @@ export function CommitmentCard({ commitment, onEdit, onDelete, compact = false }
       {(onEdit || onDelete) && (
         <div className="mt-4 flex items-center gap-2 border-t border-line pt-4">
           {onEdit && (
-            <Button variant="secondary" className="gap-1.5 px-3 py-1.5 text-xs" onClick={() => onEdit(commitment.id)}>
+            <Button
+              variant="secondary"
+              className="gap-1.5 px-3 py-1.5 text-xs"
+              onClick={() => onEdit(commitment.id)}
+            >
               <Pencil className="size-3.5" aria-hidden="true" />
               Edit
             </Button>
           )}
           {onDelete && (
-            <Button variant="ghost" className="gap-1.5 px-3 py-1.5 text-xs text-warn hover:bg-warn-soft" onClick={() => onDelete(commitment.id)}>
+            <Button
+              variant="ghost"
+              className="gap-1.5 px-3 py-1.5 text-xs text-warn hover:bg-warn-soft"
+              onClick={() => onDelete(commitment.id)}
+            >
               <Trash2 className="size-3.5" aria-hidden="true" />
               Delete
             </Button>

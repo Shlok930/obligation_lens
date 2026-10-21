@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useId, useRef } from 'react'
 import { Button } from './Button.jsx'
 
 export function ConfirmDialog({
@@ -12,6 +12,7 @@ export function ConfirmDialog({
   onCancel,
 }) {
   const dialogRef = useRef(null)
+  const titleId = useId()
 
   useEffect(() => {
     const node = dialogRef.current
@@ -25,10 +26,10 @@ export function ConfirmDialog({
       ref={dialogRef}
       className="w-[min(28rem,calc(100%-2rem))] rounded-2xl border border-line bg-raised p-0 shadow-lg backdrop:bg-ink/30"
       onClose={onCancel}
-      aria-labelledby="confirm-title"
+      aria-labelledby={titleId}
     >
       <form method="dialog" className="p-6" onSubmit={(event) => event.preventDefault()}>
-        <h2 id="confirm-title" className="text-lg font-semibold text-ink">
+        <h2 id={titleId} className="text-lg font-semibold text-ink">
           {title}
         </h2>
         <p className="mt-2 text-sm leading-relaxed text-muted">{body}</p>

@@ -1,4 +1,4 @@
-import { LayoutDashboard, ListChecks, PlusCircle, Settings } from 'lucide-react'
+import { CalendarRange, Compass, FileSearch2, GitBranch, LayoutDashboard, ListChecks, MessageCircleQuestion, PlusCircle, Settings } from 'lucide-react'
 
 export const NAV_ITEMS = [
   {
@@ -13,7 +13,42 @@ export const NAV_ITEMS = [
     label: 'My Obligations',
     icon: ListChecks,
     title: 'My Obligations',
-    subtitle: 'A full list will live here in a later stage.',
+    subtitle: 'All your saved commitments in one place.',
+  },
+  {
+    id: 'timeline',
+    label: 'Timeline',
+    icon: CalendarRange,
+    title: 'Obligation Timeline',
+    subtitle: 'Every deadline and action, mapped out chronologically.',
+  },
+  {
+    id: 'explorer',
+    label: 'Obligation Explorer',
+    icon: Compass,
+    title: 'Obligation Explorer',
+    subtitle: 'Understand recorded responsibilities, evidence, and what-if scenarios.',
+  },
+  {
+    id: 'documents',
+    label: 'Document Intelligence',
+    icon: FileSearch2,
+    title: 'Document Intelligence',
+    subtitle: 'Review source-backed dates, actions, and amounts before saving.',
+  },
+  {
+    id: 'dependencies',
+    label: 'Dependencies',
+    icon: GitBranch,
+    title: 'Dependency Graph',
+    subtitle: 'Map prerequisites, blockers, and connected actions.',
+  },
+  {
+    id: 'ask',
+    label: 'Ask Your Obligations',
+    icon: MessageCircleQuestion,
+    title: 'Ask Your Obligations',
+    subtitle: 'Get evidence-backed answers from your saved records.',
   },
   {
     id: 'add',
@@ -27,6 +62,6 @@ export const NAV_ITEMS = [
     label: 'Settings',
     icon: Settings,
     title: 'Settings',
-    subtitle: 'Local preferences will be stored in this browser.',
+    subtitle: 'Manage local records and backups for this browser.',
   },
 ]

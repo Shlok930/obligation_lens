@@ -1,4 +1,4 @@
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { CATEGORIES, CHANNELS, CURRENCIES, STATUSES } from '../../data/catalog.js'
 import {
   buildCommitmentRecord,
@@ -25,19 +25,31 @@ export function CommitmentForm({
   const [warnings, setWarnings] = useState({})
   const [saving, setSaving] = useState(false)
   const [submitError, setSubmitError] = useState(null)
+  const [externalChange, setExternalChange] = useState(false)
+  const editedRef = useRef(false)
+  const submitLock = useRef(false)
+  const baseUpdatedAtRef = useRef(existing?.updatedAt)
 
   useEffect(() => {
+    if (editedRef.current) {
+      setExternalChange(true)
+      return
+    }
     setForm(existing ? formFromCommitment(existing) : emptyCommitmentForm())
+    baseUpdatedAtRef.current = existing?.updatedAt
     setErrors({})
     setWarnings({})
     setSubmitError(null)
+    setExternalChange(false)
   }, [existing])
 
   function patch(values) {
+    editedRef.current = true
     setForm((current) => ({ ...current, ...values }))
   }
 
   function patchFinancial(values) {
+    editedRef.current = true
     setForm((current) => ({
       ...current,
       financialExposure: { ...current.financialExposure, ...values },
@@ -46,7 +58,7 @@ export function CommitmentForm({
 
   async function handleSubmit(event) {
     event.preventDefault()
-    if (saving) return
+    if (saving || submitLock.current) return
     const result = validateCommitmentForm(form)
     setErrors(result.errors)
     setWarnings(result.warnings)
@@ -54,12 +66,19 @@ export function CommitmentForm({
       setSubmitError('Please correct the highlighted fields. Your entries are still here.')
       return
     }
+    submitLock.current = true
     setSaving(true)
     setSubmitError(null)
     const record = buildCommitmentRecord(form, { existing })
-    const saved = await onSave(record)
+    let saved
+    try {
+      saved = await onSave(record, existing ? baseUpdatedAtRef.current : undefined)
+    } catch {
+      saved = { ok: false, error: 'The commitment could not be saved. Your entries are still here.' }
+    }
     if (!saved?.ok) {
       setSubmitError(saved?.error ?? 'The commitment could not be saved.')
+      submitLock.current = false
       setSaving(false)
       return
     }
@@ -306,6 +325,13 @@ export function CommitmentForm({
           onChange={(actions) => patch({ actions })}
         />
       </FormSection>
+
+      {externalChange && existing ? (
+        <div className="flex flex-col gap-2 rounded-2xl border border-warn/20 bg-warn-soft px-4 py-3 text-sm text-warn sm:flex-row sm:items-center sm:justify-between" role="status">
+          <p>This commitment changed in another tab. Your unsaved edits are preserved; reload the latest version before continuing.</p>
+          <Button variant="secondary" className="shrink-0" onClick={() => { editedRef.current = false; baseUpdatedAtRef.current = existing.updatedAt; setForm(formFromCommitment(existing)); setErrors({}); setWarnings({}); setSubmitError(null); setExternalChange(false) }}>Reload latest</Button>
+        </div>
+      ) : null}
 
       {submitError ? (
         <p className="rounded-2xl border border-warn/20 bg-warn-soft px-4 py-3 text-sm text-warn" role="alert">
